@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- Activates scanning of @Repository and @Service and @Component -->
+
+	<context:component-scan
+		base-package="myhanh.com" />
+
+	<!-- Datasource -->
+	<bean id="dataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="com.mysql.jdbc.Driver" />
+		
+		<!-- org.mariadb.jdbc.Driver -->
+
+		<property name="jdbcUrl"
+			value="jdbc:mysql://localhost:3306/myhanhdb?useUnicode=true&amp;characterEncoding=utf-8&amp;characterSetResults=UTF-8&amp;useSSL=false" />
+		<property name="user" value="root" />
+		<property name="password" value="root" />
+
+		<property name="idleConnectionTestPeriod" value="10800" />
+		<property name="maxIdleTime" value="21600" />
+		<property name="acquireIncrement" value="2" />
+		<property name="minPoolSize" value="1" />
+		<property name="maxPoolSize" value="5" />
+		<property name="maxStatementsPerConnection" value="3000" />
+	</bean>
+
+	<!-- hibernate SessionFactory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="packagesToScan">
+			<array>
+				<value>myhanh.com.entity</value>
+			</array>
+		</property>
+		<property name="configLocation">
+			<value>classpath:hibernate.cfg.xml</value>
+		</property>
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="2500000"></property>
+	</bean>
+
+
+	<tx:annotation-driven
+		transaction-manager="transactionManager" />
+<!-- 		<bean
+		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="defaultViews">
+			<list>
+				<ref bean="jsonView" />
+				<ref bean="xmlView" />
+			</list>
+		</property>
+	</bean>
+	<bean id="jsonView"
+		class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+		<property name="prettyPrint" value="true" />
+	</bean> -->
+<!-- 	<bean id="xmlView"
+		class="org.springframework.web.servlet.view.xml.MarshallingView">
+		<constructor-arg>
+			<bean class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+				<property name="classesToBeBound">
+					<list>
+						<value>myhanh.com.entity.Product</value>
+					</list>
+				</property>
+			</bean>
+		</constructor-arg>
+	</bean> -->
+
+</beans>
