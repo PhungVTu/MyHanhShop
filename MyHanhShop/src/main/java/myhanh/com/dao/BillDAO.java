@@ -7,5 +7,6 @@ import myhanh.com.entity.Bill;
 public interface BillDAO {
 	public boolean insertBillOrder(Bill bill);
 	public List<Bill> getListBill();
+	public boolean getUser();
 
 }
