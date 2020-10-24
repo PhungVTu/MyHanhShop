@@ -81,5 +81,15 @@ public class AdminController {
 		
 		return test;
 	}
+    @GET
+    @RequestMapping("/getData/abc")
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    public List<Product> getDatas()
+    {
+        List<Product> testada = productService.findAll(0, 0);
+
+        return testada;
+    }
 
 }
